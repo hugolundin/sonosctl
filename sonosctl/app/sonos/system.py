@@ -6,26 +6,32 @@ DEFAULT_VOLUME = '50'
 COORDINATOR = 'Living Room'
 
 def play_sound(device, uri, title, duration=2):
-
     # Take a snapshot. 
     snap = Snapshot(device)
     snap.snapshot()
 
     # Play the given sound and wait a while.
-    device.play_uri(uri, title=title)
+    device.play_uri(f'http://10.0.0.52:5000{uri}', title=title)
     time.sleep(duration)
     
     # Restore the snapshot. 
     snap.restore(fade=True)
 
-def group():
-    raise Exception('hej')
+def group(sound_url):
     d = soco.discovery.by_name(COORDINATOR)
     d.group.coordinator.partymode()
 
-def ungroup():
+    for d in soco.discover():
+        d.volume = DEFAULT_VOLUME
+
+    play_sound(d.group.coordinator, sound_url, 'Speakers grouped')
+
+def ungroup(sound_url):
     for zone in list(soco.discover()):
         zone.unjoin()
+
+    d = soco.discovery.by_name(COORDINATOR)
+    play_sound(d.group.coordinator, sound_url, 'Speakers grouped')
 
 def get_speakers():
     return {d.player_name : d.ip_address for d in soco.discover()}
