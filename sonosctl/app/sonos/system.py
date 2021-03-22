@@ -19,6 +19,7 @@ def play_sound(device, uri, title, duration=2):
     snap.restore(fade=True)
 
 def group():
+    raise Exception('hej')
     d = soco.discovery.by_name(COORDINATOR)
     d.group.coordinator.partymode()
 
@@ -26,5 +27,5 @@ def ungroup():
     for zone in list(soco.discover()):
         zone.unjoin()
 
-def speakers():
+def get_speakers():
     return {d.player_name : d.ip_address for d in soco.discover()}

@@ -1,23 +1,22 @@
 from . import sonos
-from flask import render_template, url_for, redirect, Response
+from . import system
+
+from flask import render_template, Response, abort
 
 @sonos.route('/group')
 def group():
     try:
-        pass
-        # sonos.group()
+        system.group()
     except Exception as e:
-        return Response(status=500)
+        abort(500)
 
 @sonos.route('/ungroup')
 def ungroup():
     try:
-        pass
-        # sonos.ungroup()
+        system.ungroup()
     except Exception as e:
-        return Response(status=500) 
+        abort(500)
 
 @sonos.route('/speakers')
 def speakers():
-    return ''
-    # return sonos.speakers()
+    return system.get_speakers()
