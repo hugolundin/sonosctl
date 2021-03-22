@@ -17,21 +17,32 @@ def play_sound(device, uri, title, duration=2):
     # Restore the snapshot. 
     snap.restore(fade=True)
 
-def group(sound_url):
+def group():
     d = soco.discovery.by_name(COORDINATOR)
     d.group.coordinator.partymode()
-
-    for d in soco.discover():
-        d.volume = DEFAULT_VOLUME
-
-    play_sound(d.group.coordinator, sound_url, 'Speakers grouped')
 
 def ungroup(sound_url):
     for zone in list(soco.discover()):
         zone.unjoin()
 
     d = soco.discovery.by_name(COORDINATOR)
-    play_sound(d.group.coordinator, sound_url, 'Speakers grouped')
+
+def set_volume(volume=DEFAULT_VOLUME):
+    for d in soco.discover():
+        d.volume = volume
+
+def set_status_light(light_on):
+    for d in soco.discover():
+        d.status_light = light_on
+    
 
 def get_speakers():
-    return {d.player_name : d.ip_address for d in soco.discover()}
+    speakers = {}
+
+    for s in soco.discover():
+        speakers[s.player_name] = dict()
+        speakers[s.player_name]['volume'] = s.volume
+        speakers[s.player_name]['address'] = s.ip_address
+        speakers[s.player_name]['status_light'] = s.status_light
+
+    return speakers
