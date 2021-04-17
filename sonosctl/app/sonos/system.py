@@ -5,23 +5,11 @@ import soco, time, json
 DEFAULT_VOLUME = '50'
 COORDINATOR = 'Living Room'
 
-def play_sound(device, uri, title, duration=2):
-    # Take a snapshot. 
-    snap = Snapshot(device)
-    snap.snapshot()
-
-    # Play the given sound and wait a while.
-    device.play_uri(f'http://10.0.0.52:5000{uri}', title=title)
-    time.sleep(duration)
-    
-    # Restore the snapshot. 
-    snap.restore(fade=True)
-
 def group():
     d = soco.discovery.by_name(COORDINATOR)
     d.group.coordinator.partymode()
 
-def ungroup(sound_url):
+def ungroup():
     for zone in list(soco.discover()):
         zone.unjoin()
 
@@ -35,7 +23,6 @@ def set_status_light(light_on):
     for d in soco.discover():
         d.status_light = light_on
     
-
 def get_speakers():
     speakers = {}
 

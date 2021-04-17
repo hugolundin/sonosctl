@@ -1,12 +1,11 @@
 from . import sonos
 from . import system
-
 from flask import render_template, Response, abort, url_for
 
 @sonos.route('/group')
 def group():
     try:
-        system.group(url_for('static', filename='confirm.mp3'))
+        system.group()
     except Exception as e:
         print(e)
         abort(500)
@@ -16,7 +15,7 @@ def group():
 @sonos.route('/ungroup')
 def ungroup():
     try:
-        system.ungroup(url_for('static', filename='confirm.mp3'))
+        system.ungroup()
     except Exception as e:
         print(e)
         abort(500)
@@ -26,6 +25,14 @@ def ungroup():
 @sonos.route('/speakers')
 def speakers():
     return system.get_speakers()
+
+@sonos.route('/speakers/volume/<int:percentage>')
+def volume(percentage):
+    if percentage < 0 or percentage > 100:
+        abort(500)
+
+    system.set_volume(percentage)
+    return Response(status=200)
 
 @sonos.route('/speakers/status_light/on')
 def status_light_on():
